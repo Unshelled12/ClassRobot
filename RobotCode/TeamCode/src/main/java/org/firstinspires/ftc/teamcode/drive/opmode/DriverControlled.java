@@ -25,9 +25,9 @@ public class DriverControlled extends LinearOpMode {
 
         while(!isStopRequested())
         {
-            double y = -gamepad1.left_stick_y;
-            double strafe = gamepad1.right_stick_x;
-            double spin = gamepad1.left_stick_x;
+            double y = gamepad1.left_stick_y;
+            double strafe = -gamepad1.left_stick_x;
+            double spin = gamepad1.right_stick_x;
 
             leftFront.setPower(y + strafe + spin);
             leftRear.setPower(y - strafe + spin);
