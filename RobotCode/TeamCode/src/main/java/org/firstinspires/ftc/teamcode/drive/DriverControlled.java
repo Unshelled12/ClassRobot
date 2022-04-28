@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.drive;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -39,10 +39,22 @@ public class DriverControlled extends LinearOpMode {
             double strafe = -gamepad1.left_stick_x;
             double spin = gamepad1.right_stick_x;
 
-            leftFront.setPower(y + strafe + spin);
-            leftRear.setPower(y - strafe + spin);
-            rightFront.setPower(y - strafe - spin);
-            rightRear.setPower(y + strafe - spin);
+            //set motor power to 1/2 speed
+            if(gamepad1.left_bumper)
+            {
+                leftFront.setPower((y + strafe + spin) / 2);
+                leftRear.setPower((y - strafe + spin) / 2);
+                rightFront.setPower((y - strafe - spin) / 2);
+                rightRear.setPower((y + strafe - spin) / 2);
+            }
+            //set motor power to full
+            else
+            {
+                leftFront.setPower(y + strafe + spin);
+                leftRear.setPower(y - strafe + spin);
+                rightFront.setPower(y - strafe - spin);
+                rightRear.setPower(y + strafe - spin);
+            }
 
             //set hook to down position
             if(gamepad1.a)
