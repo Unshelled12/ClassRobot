@@ -297,7 +297,7 @@ public class SampleTankDrive extends TankDrive {
 
     @Override
     public double getRawExternalHeading() {
-        return imu.getAngularOrientation().firstAngle;
+        return 0;
     }
 
     @Override

@@ -13,6 +13,7 @@ public class DriverControlled extends LinearOpMode {
     private DcMotor rightFront;
     private DcMotor rightRear;
     private DcMotor launch;
+    private DcMotor suck;
 
     private Servo hook;
 
@@ -22,6 +23,7 @@ public class DriverControlled extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         launch = hardwareMap.get(DcMotor.class, "launch");
+        suck = hardwareMap.get(DcMotor.class, "suck");
 
         hook = hardwareMap.get(Servo.class, "hook");
 
@@ -75,6 +77,19 @@ public class DriverControlled extends LinearOpMode {
             else
             {
                 launch.setPower(0);
+            }
+
+            //spin suck motor
+            if(gamepad1.x && gamepad1.right_bumper)
+            {
+                suck.setPower(1);
+            }
+            else if(gamepad1.x)
+            {
+                suck.setPower(-1);
+            }
+            else {
+                suck.setPower(0);
             }
         }
     }
