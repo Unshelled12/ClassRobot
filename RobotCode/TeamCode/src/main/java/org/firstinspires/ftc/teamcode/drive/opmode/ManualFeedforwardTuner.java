@@ -118,9 +118,9 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     double currentVelo = poseVelo.getX();
 
                     // update telemetry
-                    telemetry.addData("targetVelocity", motionState.getV());
+                    telemetry.addData("targetVelocity", -motionState.getV());
                     telemetry.addData("measuredVelocity", currentVelo);
-                    telemetry.addData("error", motionState.getV() - currentVelo);
+                    telemetry.addData("error", -motionState.getV() - currentVelo);
                     break;
                 case DRIVER_MODE:
                     if (gamepad1.b) {

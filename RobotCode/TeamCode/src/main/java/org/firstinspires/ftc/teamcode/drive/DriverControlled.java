@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
@@ -14,8 +15,11 @@ public class DriverControlled extends LinearOpMode {
     private DcMotor rightRear;
     private DcMotor launch;
     private DcMotor suck;
+    private DcMotor crane;
 
     private Servo hook;
+    private Servo level;
+    private Servo clutch;
 
     public void runOpMode() throws InterruptedException{
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
@@ -24,11 +28,16 @@ public class DriverControlled extends LinearOpMode {
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         launch = hardwareMap.get(DcMotor.class, "launch");
         suck = hardwareMap.get(DcMotor.class, "suck");
+        crane = hardwareMap.get(DcMotor.class, "crane");
 
         hook = hardwareMap.get(Servo.class, "hook");
+        level = hardwareMap.get(Servo.class, "level");
+        clutch = hardwareMap.get(Servo.class, "clutch");
 
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
+        suck.setDirection(DcMotor.Direction.REVERSE);
+        crane.setDirection(DcMotor.Direction.REVERSE);
 
         hook.setPosition(0.35);
 
@@ -36,6 +45,18 @@ public class DriverControlled extends LinearOpMode {
 
         while(!isStopRequested())
         {
+            //Level Target
+            double target = 0;
+
+            if(gamepad2.dpad_up && target <= 0.95)
+            {
+                target += 0.05;
+            }
+            else if(gamepad2.dpad_down && target >= 0.05)
+            {
+                target -= 0.05;
+            }
+
             //Drive Controls
             double y = gamepad1.left_stick_y;
             double strafe = -gamepad1.left_stick_x;
@@ -82,14 +103,30 @@ public class DriverControlled extends LinearOpMode {
             //spin suck motor
             if(gamepad1.x && gamepad1.right_bumper)
             {
-                suck.setPower(1);
+                suck.setPower(-1);
             }
             else if(gamepad1.x)
             {
-                suck.setPower(-1);
+                suck.setPower(1);
             }
             else {
                 suck.setPower(0);
+            }
+
+            //Lift/lower crane
+            crane.setPower(gamepad2.left_stick_y/2);
+
+            //Level Crane
+            level.setPosition(target);
+
+            //Close Grip
+            if(gamepad2.left_bumper)
+            {
+                clutch.setPosition(0);
+            }
+            else if(gamepad2.right_bumper)
+            {
+                clutch.setPosition(0.2);
             }
         }
     }
