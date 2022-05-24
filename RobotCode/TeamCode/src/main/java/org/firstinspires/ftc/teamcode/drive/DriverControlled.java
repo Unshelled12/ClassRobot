@@ -38,24 +38,24 @@ public class DriverControlled extends LinearOpMode {
         leftRear.setDirection(DcMotor.Direction.REVERSE);
         suck.setDirection(DcMotor.Direction.REVERSE);
         crane.setDirection(DcMotor.Direction.REVERSE);
-
+        crane.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hook.setPosition(0.35);
+
+        //Level Target
+        int craneTarget = 0;
+        double target = 0;
 
         waitForStart();
 
         while(!isStopRequested())
         {
-            //Level Target
-            double target = 0;
+            if(gamepad2.left_trigger > 0)
+            {
+                target = (gamepad2.right_stick_y + 1)/2;
+            }
 
-            if(gamepad2.dpad_up && target <= 0.95)
-            {
-                target += 0.05;
-            }
-            else if(gamepad2.dpad_down && target >= 0.05)
-            {
-                target -= 0.05;
-            }
+            telemetry.addData("Target:", target);
+            telemetry.update();
 
             //Drive Controls
             double y = gamepad1.left_stick_y;
@@ -114,7 +114,18 @@ public class DriverControlled extends LinearOpMode {
             }
 
             //Lift/lower crane
-            crane.setPower(gamepad2.left_stick_y/2);
+            if(-0.05 <= gamepad2.left_stick_y && gamepad2.left_stick_y <= 0.05)
+            {
+                crane.setTargetPosition(craneTarget);
+                crane.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                crane.setPower(0.5);
+            }
+            else
+            {
+                crane.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                crane.setPower(gamepad2.left_stick_y/1.5);
+                craneTarget = crane.getCurrentPosition();
+            }
 
             //Level Crane
             level.setPosition(target);
@@ -122,11 +133,11 @@ public class DriverControlled extends LinearOpMode {
             //Close Grip
             if(gamepad2.left_bumper)
             {
-                clutch.setPosition(0);
+                clutch.setPosition(0.275);
             }
             else if(gamepad2.right_bumper)
             {
-                clutch.setPosition(0.2);
+                clutch.setPosition(0.55);
             }
         }
     }
